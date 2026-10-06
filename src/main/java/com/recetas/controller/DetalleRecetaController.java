@@ -18,12 +18,21 @@ public class DetalleRecetaController {
     }
 
     @PostMapping
-    public ResponseEntity<DetalleRecetaEntity> guardarDetalle(
+    public ResponseEntity<?> guardarDetalle(
             @RequestBody DetalleRecetaEntity detalle) {
 
-        return ResponseEntity.ok(
-                detalleRecetaService.guardarDetalle(detalle)
-        );
+        try {
+
+            return ResponseEntity.ok(
+                    detalleRecetaService.guardarDetalle(detalle)
+            );
+
+        } catch (IllegalArgumentException e) {
+
+            return ResponseEntity
+                    .badRequest()
+                    .body(e.getMessage());
+        }
     }
 
     @GetMapping("/receta/{idReceta}")

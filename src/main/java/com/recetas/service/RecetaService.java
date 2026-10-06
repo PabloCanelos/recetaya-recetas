@@ -2,7 +2,7 @@ package com.recetas.service;
 
 import com.recetas.dto.DetalleRecetaRequestDTO;
 import com.recetas.dto.RecetaRequestDTO;
-import com.recetas.dto.ReservaStockRequestDTO;
+
 import com.recetas.entity.DetalleRecetaEntity;
 import com.recetas.entity.EstadoReceta;
 import com.recetas.entity.RecetaEntity;
@@ -19,7 +19,7 @@ public class RecetaService {
 
     private final RecetaRepository recetaRepository;
     private final DetalleRecetaRepository detalleRecetaRepository;
-    private final ReservaStockPublisher reservaStockPublisher;
+
     private boolean transicionValida(
             EstadoReceta estadoActual,
             EstadoReceta nuevoEstado) {
@@ -40,12 +40,10 @@ public class RecetaService {
 
     public RecetaService(
             RecetaRepository recetaRepository,
-            DetalleRecetaRepository detalleRecetaRepository,
-            ReservaStockPublisher reservaStockPublisher) {
+            DetalleRecetaRepository detalleRecetaRepository) {
 
         this.recetaRepository = recetaRepository;
         this.detalleRecetaRepository = detalleRecetaRepository;
-        this.reservaStockPublisher = reservaStockPublisher;
     }
 
     @Transactional
@@ -72,13 +70,7 @@ public class RecetaService {
             detalleRecetaRepository.save(detalle);
         }
 
-        ReservaStockRequestDTO solicitudReserva = new ReservaStockRequestDTO();
 
-        solicitudReserva.setIdReceta(recetaGuardada.getId());
-        solicitudReserva.setIdSucursal(recetaGuardada.getIdSucursal());
-        solicitudReserva.setMedicamentos(request.getDetalles());
-
-        reservaStockPublisher.publicarReserva(solicitudReserva);
 
         return recetaGuardada;
     }
