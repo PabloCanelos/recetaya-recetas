@@ -3,6 +3,9 @@ package com.recetas.service;
 import com.recetas.dto.DetalleRecetaRequestDTO;
 import com.recetas.dto.RecetaRequestDTO;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import com.recetas.entity.DetalleRecetaEntity;
 import com.recetas.entity.EstadoReceta;
 import com.recetas.entity.RecetaEntity;
@@ -57,22 +60,22 @@ public class RecetaService {
         receta.setFechaEmision(LocalDateTime.now());
         receta.setEstado(EstadoReceta.PENDIENTE_RESERVA);
 
-        RecetaEntity recetaGuardada = recetaRepository.save(receta);
+        List<DetalleRecetaEntity> detalles = new ArrayList<>();
 
         for (DetalleRecetaRequestDTO detalleRequest : request.getDetalles()) {
 
             DetalleRecetaEntity detalle = new DetalleRecetaEntity();
 
-            detalle.setIdReceta(recetaGuardada.getId());
+            detalle.setReceta(receta);
             detalle.setIdMedicamento(detalleRequest.getIdMedicamento());
             detalle.setCantidad(detalleRequest.getCantidad());
 
-            detalleRecetaRepository.save(detalle);
+            detalles.add(detalle);
         }
 
+        receta.setDetalles(detalles);
 
-
-        return recetaGuardada;
+        return recetaRepository.save(receta);
     }
 
     public List<RecetaEntity> listarRecetas() {
@@ -109,5 +112,15 @@ public class RecetaService {
         receta.setEstado(nuevoEstado);
 
         return recetaRepository.save(receta);
+
+    }
+    public boolean eliminarReceta(Integer id) {
+
+        if (!recetaRepository.existsById(id)) {
+            return false;
+        }
+
+        recetaRepository.deleteById(id);
+        return true;
     }
 }

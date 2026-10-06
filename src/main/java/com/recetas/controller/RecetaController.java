@@ -74,4 +74,16 @@ public class RecetaController {
                     .body(e.getMessage());
         }
     }
+
+    @DeleteMapping("/{id}")
+    public ResponseEntity<?> eliminarReceta(@PathVariable Integer id) {
+
+        boolean eliminada = recetaService.eliminarReceta(id);
+
+        if (!eliminada) {
+            return ResponseEntity.notFound().build();
+        }
+
+        return ResponseEntity.noContent().build();
+    }
 }

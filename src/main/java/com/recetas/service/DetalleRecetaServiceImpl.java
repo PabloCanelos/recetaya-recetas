@@ -24,7 +24,10 @@ public class DetalleRecetaServiceImpl implements DetalleRecetaService {
     @Override
     public DetalleRecetaEntity guardarDetalle(DetalleRecetaEntity detalle) {
 
-        if (!recetaRepository.existsById(detalle.getIdReceta())) {
+        if (detalle.getReceta() == null
+                || detalle.getReceta().getId() == null
+                || !recetaRepository.existsById(detalle.getReceta().getId())) {
+
             throw new IllegalArgumentException("La receta indicada no existe");
         }
 
@@ -37,6 +40,6 @@ public class DetalleRecetaServiceImpl implements DetalleRecetaService {
 
     @Override
     public List<DetalleRecetaEntity> listarPorReceta(Integer idReceta) {
-        return detalleRecetaRepository.findByIdReceta(idReceta);
+        return detalleRecetaRepository.findByRecetaId(idReceta);
     }
 }
