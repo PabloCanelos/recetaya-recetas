@@ -9,19 +9,19 @@ import java.util.List;
 import com.recetas.entity.DetalleRecetaEntity;
 import com.recetas.entity.EstadoReceta;
 import com.recetas.entity.RecetaEntity;
-import com.recetas.repository.DetalleRecetaRepository;
+
 import com.recetas.repository.RecetaRepository;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDateTime;
-import java.util.List;
+
 
 @Service
 public class RecetaService {
 
     private final RecetaRepository recetaRepository;
-    private final DetalleRecetaRepository detalleRecetaRepository;
+
 
     private boolean transicionValida(
             EstadoReceta estadoActual,
@@ -41,12 +41,8 @@ public class RecetaService {
         };
     }
 
-    public RecetaService(
-            RecetaRepository recetaRepository,
-            DetalleRecetaRepository detalleRecetaRepository) {
-
+    public RecetaService(RecetaRepository recetaRepository) {
         this.recetaRepository = recetaRepository;
-        this.detalleRecetaRepository = detalleRecetaRepository;
     }
 
     @Transactional
@@ -63,6 +59,11 @@ public class RecetaService {
         List<DetalleRecetaEntity> detalles = new ArrayList<>();
 
         for (DetalleRecetaRequestDTO detalleRequest : request.getDetalles()) {
+
+            // La cantidad de medicamentos debe ser válida.
+            if (detalleRequest.getCantidad() == null || detalleRequest.getCantidad() <= 0) {
+                throw new IllegalArgumentException("La cantidad debe ser mayor a 0");
+            }
 
             DetalleRecetaEntity detalle = new DetalleRecetaEntity();
 
