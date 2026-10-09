@@ -20,12 +20,23 @@ public class RecetaController {
     }
 
     @PostMapping
-    public ResponseEntity<RecetaEntity> crearReceta(
+    public ResponseEntity<?> crearReceta(
             @RequestBody RecetaRequestDTO request) {
 
-        RecetaEntity nuevaReceta = recetaService.crearReceta(request);
+        try {
 
-        return ResponseEntity.ok(nuevaReceta);
+            RecetaEntity nuevaReceta = recetaService.crearReceta(request);
+
+            return ResponseEntity
+                    .status(201)
+                    .body(nuevaReceta);
+
+        } catch (IllegalArgumentException e) {
+
+            return ResponseEntity
+                    .badRequest()
+                    .body(e.getMessage());
+        }
     }
 
     @GetMapping

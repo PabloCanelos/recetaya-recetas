@@ -38,4 +38,4 @@ Repository
     ↓
 Entity
     ↓
-MySQL
+Base de datos
