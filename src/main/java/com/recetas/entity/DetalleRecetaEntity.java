@@ -1,5 +1,6 @@
 package com.recetas.entity;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -18,7 +19,10 @@ public class DetalleRecetaEntity {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
 
-    private Integer idReceta;
+    @JsonBackReference
+    @ManyToOne
+    @JoinColumn(name = "id_receta", nullable = false)
+    private RecetaEntity receta;
 
     private Integer idMedicamento;
 

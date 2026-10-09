@@ -20,12 +20,23 @@ public class RecetaController {
     }
 
     @PostMapping
-    public ResponseEntity<RecetaEntity> crearReceta(
+    public ResponseEntity<?> crearReceta(
             @RequestBody RecetaRequestDTO request) {
 
-        RecetaEntity nuevaReceta = recetaService.crearReceta(request);
+        try {
 
-        return ResponseEntity.ok(nuevaReceta);
+            RecetaEntity nuevaReceta = recetaService.crearReceta(request);
+
+            return ResponseEntity
+                    .status(201)
+                    .body(nuevaReceta);
+
+        } catch (IllegalArgumentException e) {
+
+            return ResponseEntity
+                    .badRequest()
+                    .body(e.getMessage());
+        }
     }
 
     @GetMapping
@@ -73,5 +84,17 @@ public class RecetaController {
                     .badRequest()
                     .body(e.getMessage());
         }
+    }
+
+    @DeleteMapping("/{id}")
+    public ResponseEntity<?> eliminarReceta(@PathVariable Integer id) {
+
+        boolean eliminada = recetaService.eliminarReceta(id);
+
+        if (!eliminada) {
+            return ResponseEntity.notFound().build();
+        }
+
+        return ResponseEntity.noContent().build();
     }
 }
